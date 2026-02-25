@@ -30,7 +30,7 @@ final class QuestionPrompt
         $avoidClause = '';
         if (!empty($previousQuestions)) {
             $listed = implode("\n", array_map(
-                static fn(string $q, int $i): string => '  ' . ($i + 1) . '. ' . $q,
+                static fn(string $q, int $i): string => '  ' . ($i + 1) . '. ' . preg_replace('/[\x00-\x1F\x7F]/', ' ', strip_tags($q)),
                 $previousQuestions,
                 array_keys($previousQuestions)
             ));

@@ -18,9 +18,10 @@ final class QuestionResponseParser
         // Decode directly first (format:'json' should give us clean JSON)
         $json = json_decode($raw, true);
 
-        // Secondary fallback: extract the first {...} block in case of surrounding whitespace
+        // Secondary fallback: extract the outermost {...} block (greedy) to handle embedded
+        // braces in the question text, e.g. "{a} groups of {b}".
         if (! is_array($json)) {
-            if (preg_match('/\{[^}]+\}/s', $raw, $matches)) {
+            if (preg_match('/\{.*\}/s', $raw, $matches)) {
                 $json = json_decode($matches[0], true);
             }
         }
@@ -29,7 +30,7 @@ final class QuestionResponseParser
             is_array($json)
             && isset($json['question'], $json['correct_answer'])
             && is_string($json['question'])
-            && is_numeric($json['correct_answer'])
+            && filter_var($json['correct_answer'], FILTER_VALIDATE_INT) !== false
         ) {
             return [
                 'question' => trim($json['question']),

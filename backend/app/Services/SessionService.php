@@ -18,7 +18,7 @@ final class SessionService
 
     public function create(): SessionDto
     {
-        $session = $this->sessionQueries->create(5, 0);
+        $session = $this->sessionQueries->create($this->adaptiveAlgorithm->getTotalQuestions(), 0);
 
         $difficulty = $this->adaptiveAlgorithm->getStartingDifficulty();
         $questionData = $this->questionGenerator->generate($difficulty);

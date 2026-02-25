@@ -24,7 +24,7 @@ final class QuestionGeneratorService implements QuestionGeneratorContract
      */
     public function generate(int $difficulty, array $previousQuestions = []): array
     {
-        ['prompt' => $promptText] = $this->prompt->build($difficulty, $previousQuestions);
+        ['prompt' => $promptText, 'correct_answer' => $phpAnswer] = $this->prompt->build($difficulty, $previousQuestions);
 
         try {
             $response = $this->client->generateJson(
@@ -41,8 +41,27 @@ final class QuestionGeneratorService implements QuestionGeneratorContract
                 return $this->fallback->generate($difficulty);
             }
 
-            return $this->parser->parse($response->json(), $this->client->getModel())
-                ?? $this->fallback->generate($difficulty);
+            $parsed = $this->parser->parse($response->json(), $this->client->getModel());
+
+            if ($parsed === null) {
+                return $this->fallback->generate($difficulty);
+            }
+
+            // Reject if the model leaked the answer into the question text despite the instruction.
+            if (str_contains($parsed['question'], (string) $phpAnswer)) {
+                Log::warning('Question text contains correct answer — using fallback', [
+                    'answer' => $phpAnswer,
+                    'question' => $parsed['question'],
+                    'model' => $this->client->getModel(),
+                ]);
+
+                return $this->fallback->generate($difficulty);
+            }
+
+            return [
+                'question' => $parsed['question'],
+                'correct_answer' => $phpAnswer,
+            ];
         } catch (\Throwable $e) {
             Log::error('Question generation failed', ['error' => $e->getMessage()]);
 
