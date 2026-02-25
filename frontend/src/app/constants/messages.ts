@@ -12,6 +12,7 @@ export const ERROR_MESSAGES = {
   submitAnswer: 'Failed to submit answer',
   loadSummary: 'Failed to load summary',
   apiError: 'API returned success: false',
+  missingConfig: 'Service is temporarily unavailable. Please contact support.',
 } as const;
 
 export const UI_COPY = {
