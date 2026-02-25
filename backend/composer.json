@@ -13,7 +13,6 @@
         "laravel/pint": "^1.0",
         "pestphp/pest": "^3.0",
         "pestphp/pest-plugin-laravel": "^3.0",
-        "phpmd/phpmd": "^2.15",
         "phpunit/phpunit": "^11.0"
     },
     "autoload": {
@@ -32,22 +31,19 @@
     "prefer-stable": true,
     "scripts": {
         "post-install-cmd": [
-            "[ -f ../captainhook.json ] && vendor/bin/captainhook install --force --skip-existing -c ../captainhook.json || true"
+            "[ -f captainhook.json ] && vendor/bin/captainhook install --force --skip-existing -c captainhook.json || true"
         ],
         "post-update-cmd": [
-            "[ -f ../captainhook.json ] && vendor/bin/captainhook install --force --skip-existing -c ../captainhook.json || true"
+            "[ -f captainhook.json ] && vendor/bin/captainhook install --force --skip-existing -c captainhook.json || true"
         ],
         "hooks:install": [
-            "vendor/bin/captainhook install --force -c ../captainhook.json"
+            "vendor/bin/captainhook install --force -c captainhook.json"
         ],
         "check:style": [
             "vendor/bin/pint --test app"
         ],
         "fix:style": [
             "vendor/bin/pint app"
-        ],
-        "check:mess": [
-            "vendor/bin/phpmd app text phpmd.xml --suffixes php"
         ],
         "check:stan": [
             "vendor/bin/phpstan analyse --configuration phpstan.neon"

@@ -17,11 +17,6 @@
                 "conditions": []
             },
             {
-                "run": "vendor/bin/phpmd app text phpmd.xml --suffixes php",
-                "options": {},
-                "conditions": []
-            },
-            {
                 "run": "vendor/bin/phpstan analyse --configuration phpstan.neon",
                 "options": {},
                 "conditions": []
