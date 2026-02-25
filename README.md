@@ -45,6 +45,8 @@ cd adaptive-maths-practice
 
 Three `.env` files are required — one at the repository root, one inside `backend/` and one inside `frontend/`.
 
+**macOS / Linux**
+
 ```bash
 # Root-level .env — used by docker-compose.yml for MySQL init variables
 cp backend/.env.example .env
@@ -54,6 +56,32 @@ cp backend/.env.example backend/.env
 
 # Frontend .env — read by React at runtime
 cp frontend/.env.example frontend/.env
+```
+
+**Windows (PowerShell)**
+
+```powershell
+# Root-level .env — used by docker-compose.yml for MySQL init variables
+Copy-Item backend\.env.example .env
+
+# Backend .env — read by Laravel at runtime
+Copy-Item backend\.env.example backend\.env
+
+# Frontend .env — read by React at runtime
+Copy-Item frontend\.env.example frontend\.env
+```
+
+**Windows (Command Prompt)**
+
+```cmd
+:: Root-level .env — used by docker-compose.yml for MySQL init variables
+copy backend\.env.example .env
+
+:: Backend .env — read by Laravel at runtime
+copy backend\.env.example backend\.env
+
+:: Frontend .env — read by React at runtime
+copy frontend\.env.example frontend\.env
 ```
 
 Edit `backend/.env` and set at minimum:
@@ -66,10 +94,9 @@ Edit `backend/.env` and set at minimum:
 | `CORS_ALLOWED_ORIGINS` | `http://localhost:5173,http://127.0.0.1:5173` (Vite default) |
 | `OLLAMA_MODEL` | `llama3.2` (default) |
 
-For the frontend:
+For the frontend, the copied `.env` requires no changes locally:
 
-```bash
-cp frontend/.env.example frontend/.env
+```
 # VITE_API_BASE_URL=http://localhost:8000  ← default, no change needed locally
 ```
 
