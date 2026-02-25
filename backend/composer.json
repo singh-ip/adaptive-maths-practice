@@ -1,0 +1,66 @@
+{
+    "name": "singh-ip/adaptive-maths-practice-api",
+    "description": "Grade 5-6 Multiplication Practice API with Adaptive Difficulty and AI Feedback",
+    "require": {
+        "php": "^8.4",
+        "laravel/framework": "^12.0",
+        "laravel/tinker": "^2.9",
+        "guzzlehttp/guzzle": "^7.8"
+    },
+    "require-dev": {
+        "captainhook/captainhook": "^5.28",
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "phpmd/phpmd": "^2.15",
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "scripts": {
+        "post-install-cmd": [
+            "[ -f ../captainhook.json ] && vendor/bin/captainhook install --force --skip-existing -c ../captainhook.json || true"
+        ],
+        "post-update-cmd": [
+            "[ -f ../captainhook.json ] && vendor/bin/captainhook install --force --skip-existing -c ../captainhook.json || true"
+        ],
+        "hooks:install": [
+            "vendor/bin/captainhook install --force -c ../captainhook.json"
+        ],
+        "check:style": [
+            "vendor/bin/pint --test app"
+        ],
+        "fix:style": [
+            "vendor/bin/pint app"
+        ],
+        "check:mess": [
+            "vendor/bin/phpmd app text phpmd.xml --suffixes php"
+        ],
+        "check:stan": [
+            "vendor/bin/phpstan analyse --configuration phpstan.neon"
+        ],
+        "test": [
+            "vendor/bin/phpunit --configuration phpunit.xml"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "pestphp/pest-plugin-laravel": true
+        }
+    }
+}
