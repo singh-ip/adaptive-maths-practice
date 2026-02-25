@@ -19,3 +19,9 @@ export const UI_COPY = {
   genericErrorTitle: 'Oops! Something went wrong',
   tryAgain: 'Try Again',
 } as const;
+
+export const DEV_WARNINGS = {
+  submitAnswerMissingState: '[useSubmitAnswer] Called without sessionId or currentQuestion',
+  nextQuestionMissingSessionId: '[useNextQuestion] Session complete but sessionId is null — this should not happen',
+  sessionContextOutsideProvider: '[useSessionContext] Must be used within a SessionProvider',
+} as const;
