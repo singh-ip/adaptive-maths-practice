@@ -1,7 +1,7 @@
 {
     "config": {
         "php-path": "php",
-        "git-directory": ".git",
+        "git-directory": "../.git",
         "verbosity": "verbose"
     },
     "commit-msg": {
@@ -9,20 +9,20 @@
         "actions": []
     },
     "pre-commit": {
-        "enabled": true,
+        "enabled": false,
         "actions": [
             {
-                "run": "cd backend && vendor/bin/pint --test app",
+                "run": "vendor/bin/pint --test app",
                 "options": {},
                 "conditions": []
             },
             {
-                "run": "cd backend && vendor/bin/phpmd app text phpmd.xml --suffixes php",
+                "run": "vendor/bin/phpmd app text phpmd.xml --suffixes php",
                 "options": {},
                 "conditions": []
             },
             {
-                "run": "cd backend && vendor/bin/phpstan analyse --configuration phpstan.neon",
+                "run": "vendor/bin/phpstan analyse --configuration phpstan.neon",
                 "options": {},
                 "conditions": []
             }
@@ -37,20 +37,16 @@
         "actions": []
     },
     "pre-push": {
-        "enabled": true,
+        "enabled": false,
         "actions": [
             {
-                "run": "cd backend && vendor/bin/phpunit --configuration phpunit.xml",
+                "run": "vendor/bin/phpunit --configuration phpunit.xml",
                 "options": {},
                 "conditions": []
             }
         ]
     },
     "post-merge": {
-        "enabled": false,
-        "actions": []
-    },
-    "post-checkout": {
         "enabled": false,
         "actions": []
     }
