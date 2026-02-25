@@ -116,6 +116,9 @@ final class SubmitAnswerService
         );
     }
 
+    /**
+     * @return array{difficulty: int, question: string, correct_answer: int}|null
+     */
     private function prepareNextQuestion(bool $isLastQuestion, bool $isCorrect, int $currentDifficulty): ?array
     {
         if ($isLastQuestion) {

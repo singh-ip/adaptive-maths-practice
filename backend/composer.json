@@ -46,7 +46,7 @@
             "vendor/bin/pint app"
         ],
         "check:stan": [
-            "vendor/bin/phpstan analyse --configuration phpstan.neon"
+            "vendor/bin/phpstan analyse --configuration phpstan.neon --memory-limit=256M"
         ],
         "test": [
             "vendor/bin/phpunit --configuration phpunit.xml"

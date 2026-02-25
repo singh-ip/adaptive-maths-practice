@@ -10,6 +10,7 @@ final readonly class SubmitAnswerDto
         public int $correctAnswer,
         public ?int $yourAnswer,
         public ?string $feedback,
+        /** @var array<string, int>|null */
         public ?array $progress,
         public ?int $nextQuestionId,
         public ?int $nextQuestionNumber,
@@ -17,6 +18,9 @@ final readonly class SubmitAnswerDto
         public ?int $nextDifficulty,
     ) {}
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

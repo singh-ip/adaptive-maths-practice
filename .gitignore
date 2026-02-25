@@ -1,0 +1,2 @@
+# Root-level .env holds Docker Compose secrets — never commit it
+.env

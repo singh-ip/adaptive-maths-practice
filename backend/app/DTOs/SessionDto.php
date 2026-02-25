@@ -12,6 +12,9 @@ final readonly class SessionDto
         public int $difficulty,
     ) {}
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

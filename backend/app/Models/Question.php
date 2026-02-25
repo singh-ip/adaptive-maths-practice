@@ -21,6 +21,9 @@ final class Question extends Model
         'correct_answer' => 'integer',
     ];
 
+    /**
+     * @return HasMany<Answer, $this>
+     */
     public function answers(): HasMany
     {
         return $this->hasMany(Answer::class);

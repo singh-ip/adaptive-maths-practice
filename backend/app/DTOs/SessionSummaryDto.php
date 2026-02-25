@@ -12,10 +12,15 @@ final readonly class SessionSummaryDto
         public int $totalQuestions,
         public int $correctAnswers,
         public float $scorePercentage,
+        /** @var list<int> */
         public array $difficultyProgression,
+        /** @var list<array<string, mixed>> */
         public array $details,
     ) {}
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

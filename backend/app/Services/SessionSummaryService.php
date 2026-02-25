@@ -42,6 +42,10 @@ final class SessionSummaryService
         return round(($session->correct_count / $session->total_questions) * 100, 2);
     }
 
+    /**
+     * @param  Collection<int, Question>  $questions
+     * @return list<array<string, mixed>>
+     */
     private function mapQuestionDetails(Collection $questions): array
     {
         return $questions->map(function (Question $question) {

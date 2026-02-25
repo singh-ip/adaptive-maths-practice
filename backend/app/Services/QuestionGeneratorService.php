@@ -18,6 +18,9 @@ final class QuestionGeneratorService implements QuestionGeneratorContract
         private readonly QuestionFallback $fallback,
     ) {}
 
+    /**
+     * @return array{question: string, correct_answer: int}
+     */
     public function generate(int $difficulty): array
     {
         ['prompt' => $promptText] = $this->prompt->build($difficulty);

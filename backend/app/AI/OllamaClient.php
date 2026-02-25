@@ -44,6 +44,9 @@ final class OllamaClient
         return $this->post($prompt, $options, format: 'json', timeout: $timeout);
     }
 
+    /**
+     * @param  array<string, mixed>  $options
+     */
     private function post(string $prompt, array $options, ?string $format, int $timeout = 30): Response
     {
         $payload = [

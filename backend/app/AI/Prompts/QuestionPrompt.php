@@ -15,6 +15,9 @@ namespace App\AI\Prompts;
  */
 final class QuestionPrompt
 {
+    /**
+     * @return array{prompt: string, correct_answer: int}
+     */
     public function build(int $difficulty): array
     {
         $ranges = $this->getDifficultyRanges($difficulty);
@@ -42,6 +45,9 @@ EOT;
         return ['prompt' => $prompt, 'correct_answer' => $answer];
     }
 
+    /**
+     * @return array{first_min: int, first_max: int, second_min: int, second_max: int}
+     */
     public function getDifficultyRanges(int $difficulty): array
     {
         return match ($difficulty) {

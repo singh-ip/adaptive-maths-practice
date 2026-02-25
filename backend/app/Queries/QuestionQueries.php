@@ -17,6 +17,9 @@ final class QuestionQueries
             ->firstOrFail();
     }
 
+    /**
+     * @return Collection<int, Question>
+     */
     public function allWithAnswers(int $sessionId): Collection
     {
         return Question::where('session_id', $sessionId)

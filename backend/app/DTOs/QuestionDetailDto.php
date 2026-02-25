@@ -14,6 +14,9 @@ final readonly class QuestionDetailDto
         public ?string $feedback,
     ) {}
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

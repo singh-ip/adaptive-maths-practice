@@ -83,6 +83,9 @@ final class QuestionFallback
         ],
     ];
 
+    /**
+     * @return array{question: string, correct_answer: int}
+     */
     public function generate(int $difficulty): array
     {
         $ranges = $this->prompt->getDifficultyRanges($difficulty);

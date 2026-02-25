@@ -1,0 +1,23 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    # Larastan-aware paths
+    paths:
+        - app
+
+    # Level 6: type safety, dead code, incorrect calls, null safety.
+    # Level 5 = safe baseline; 6 adds return-type strictness.
+    # Do NOT go above 6 without reviewing magic-method false-positives first.
+    level: 6
+
+    # ── Ignores ───────────────────────────────────────────────────────────
+    ignoreErrors: []
+
+    # ── Baseline ──────────────────────────────────────────────────────────
+    # Uncomment after first run to freeze any accepted legacy errors:
+    # baseline: phpstan-baseline.neon
+
+    # ── Parallel analysis ─────────────────────────────────────────────────
+    parallel:
+        maximumNumberOfProcesses: 4
