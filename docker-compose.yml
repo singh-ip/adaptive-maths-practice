@@ -1,0 +1,137 @@
+services:
+
+  php:
+    build:
+      context: ./backend
+      dockerfile: docker/php/Dockerfile
+    container_name: adaptive_maths_php
+    restart: unless-stopped
+    env_file: ./backend/.env
+    volumes:
+      - ./backend:/var/www/html
+      - php_vendor:/var/www/html/vendor
+    networks:
+      - adaptive_maths
+    depends_on:
+      db:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: adaptive_maths_nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./backend:/var/www/html:ro
+      - php_vendor:/var/www/html/vendor:ro
+      - ./backend/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - adaptive_maths
+    depends_on:
+      - php
+
+  db:
+    image: mysql:8.4
+    container_name: adaptive_maths_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - adaptive_maths
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  phpmyadmin:
+    image: phpmyadmin:5.2-apache
+    container_name: adaptive_maths_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: ${DB_USERNAME}
+      PMA_PASSWORD: ${DB_PASSWORD}
+      PMA_ARBITRARY: 1
+    networks:
+      - adaptive_maths
+    depends_on:
+      db:
+        condition: service_healthy
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: adaptive_maths_ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - adaptive_maths
+    # Uncomment the section below if you have an NVIDIA GPU available:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+  # ─── Ollama model bootstrap ─────────────────────────────────────────────────
+  # One-shot container that pulls the configured model into the shared volume
+  # and then exits. Re-running `docker compose up` is safe — pull is a no-op if
+  # the model is already present.
+  ollama-pull:
+    image: ollama/ollama:latest
+    container_name: adaptive_maths_ollama_pull
+    restart: "no"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - adaptive_maths
+    depends_on:
+      - ollama
+    entrypoint: ["/bin/sh", "-c", "ollama pull ${OLLAMA_MODEL}"]
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: adaptive_maths_frontend
+    restart: unless-stopped
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+    networks:
+      - adaptive_maths
+
+networks:
+  adaptive_maths:
+    driver: bridge
+
+volumes:
+  db_data:
+  ollama_data:
+  php_vendor:
+  frontend_node_modules:
