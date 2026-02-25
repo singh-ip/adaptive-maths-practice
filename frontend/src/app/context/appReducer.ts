@@ -5,6 +5,7 @@ export type AppState = {
   sessionId: string | null;
   currentQuestion: Question | null;
   nextQuestion: Question | null;
+  pastQuestions: string[];
   feedback: Feedback | null;
   summary: SessionSummary | null;
   isSessionComplete: boolean;
@@ -32,6 +33,7 @@ export const initialState: AppState = {
   sessionId: null,
   currentQuestion: null,
   nextQuestion: null,
+  pastQuestions: [],
   feedback: null,
   summary: null,
   isSessionComplete: false,
@@ -51,6 +53,7 @@ export const appReducer = (state: AppState, action: AppAction): AppState => {
         status: 'in-progress',
         sessionId: action.sessionId,
         currentQuestion: action.question,
+        pastQuestions: [action.question.text],
         isLoading: false,
         feedback: null,
       };
@@ -79,6 +82,9 @@ export const appReducer = (state: AppState, action: AppAction): AppState => {
         ...state,
         currentQuestion: state.nextQuestion,
         nextQuestion: null,
+        pastQuestions: state.nextQuestion
+          ? [...state.pastQuestions, state.nextQuestion.text]
+          : state.pastQuestions,
         feedback: null,
         isLoading: false,
       };

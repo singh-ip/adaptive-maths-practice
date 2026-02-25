@@ -16,15 +16,26 @@ namespace App\AI\Prompts;
 final class QuestionPrompt
 {
     /**
+     * @param  string[]  $previousQuestions  Question texts already used in this session.
      * @return array{prompt: string, correct_answer: int}
      */
-    public function build(int $difficulty): array
+    public function build(int $difficulty, array $previousQuestions = []): array
     {
         $ranges = $this->getDifficultyRanges($difficulty);
 
         $first = rand($ranges['first_min'], $ranges['first_max']);
         $second = rand($ranges['second_min'], $ranges['second_max']);
         $answer = $first * $second;
+
+        $avoidClause = '';
+        if (!empty($previousQuestions)) {
+            $listed = implode("\n", array_map(
+                static fn(string $q, int $i): string => '  ' . ($i + 1) . '. ' . $q,
+                $previousQuestions,
+                array_keys($previousQuestions)
+            ));
+            $avoidClause = "\n- The scenario and real-world context MUST be different from all previous questions in this session. Previous questions were:\n{$listed}\n  Choose a completely different setting, object, and theme.";
+        }
 
         $prompt = <<<EOT
 You are generating a maths question for a Grade 5-6 student (age 10-11).
@@ -36,7 +47,7 @@ Rules:
 - Use a realistic everyday scenario. Choose from: boxes, bags, rows of seats, baskets, packets, trays, crates, bottles, plants, eggs, pencils, floors of a car park, tiles, jars, buckets, pages, coins, buttons.
 - The question must end with "How many [items] are there in total?"
 - Do NOT include the number {$answer} anywhere in the question text.
-- Keep it to 1-2 sentences.
+- Keep it to 1-2 sentences.{$avoidClause}
 
 You MUST respond with ONLY this JSON object, no other text:
 {"question": "<your word problem here>", "correct_answer": {$answer}}

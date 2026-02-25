@@ -28,6 +28,19 @@ final class QuestionQueries
             ->get();
     }
 
+    /**
+     * Return all question texts for a session in order (oldest first).
+     *
+     * @return string[]
+     */
+    public function getQuestionTexts(int $sessionId): array
+    {
+        return Question::where('session_id', $sessionId)
+            ->orderBy('question_number')
+            ->pluck('question_text')
+            ->all();
+    }
+
     public function create(int $sessionId, int $questionNumber, int $difficulty, string $questionText, int $correctAnswer): Question
     {
         return Question::create([

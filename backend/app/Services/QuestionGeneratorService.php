@@ -19,11 +19,12 @@ final class QuestionGeneratorService implements QuestionGeneratorContract
     ) {}
 
     /**
+     * @param  string[]  $previousQuestions  Question texts already used in this session.
      * @return array{question: string, correct_answer: int}
      */
-    public function generate(int $difficulty): array
+    public function generate(int $difficulty, array $previousQuestions = []): array
     {
-        ['prompt' => $promptText] = $this->prompt->build($difficulty);
+        ['prompt' => $promptText] = $this->prompt->build($difficulty, $previousQuestions);
 
         try {
             $response = $this->client->generateJson(

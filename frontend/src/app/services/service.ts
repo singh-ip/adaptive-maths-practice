@@ -32,6 +32,7 @@ export const apiClient = {
     const data = await post<RawAnswerResponse>(`${SESSIONS_BASE}/${sessionId}/answers`, {
       question_id: submission.questionId,
       answer: submission.answer,
+      past_questions: submission.pastQuestions,
     }, signal);
 
     const feedback = buildFeedback(data);

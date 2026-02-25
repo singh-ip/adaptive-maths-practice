@@ -15,6 +15,7 @@ export interface Feedback {
 export interface AnswerSubmission {
   questionId: number;
   answer: number;
+  pastQuestions: string[];
 }
 
 export interface AnswerResponse {

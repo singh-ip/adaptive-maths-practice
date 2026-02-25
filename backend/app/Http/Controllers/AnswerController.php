@@ -17,7 +17,8 @@ final class AnswerController
         $dto = $this->submitAnswerService->handle(
             $sessionId,
             (int) $request->input('question_id'),
-            $request->getValidatedAnswer()
+            $request->getValidatedAnswer(),
+            $request->getPastQuestions(),
         );
 
         return response()->json([

@@ -18,7 +18,7 @@ export const useSubmitAnswer = () => {
     try {
       const result = await apiClient.submitAnswer(
         state.sessionId,
-        { questionId: state.currentQuestion.id, answer },
+        { questionId: state.currentQuestion.id, answer, pastQuestions: state.pastQuestions },
         signal,
       );
       dispatch({

@@ -24,7 +24,10 @@ final class SubmitAnswerService
         private readonly AnswerQueries $answerQueries,
     ) {}
 
-    public function handle(int $sessionId, int $questionId, int $studentAnswer): SubmitAnswerDto
+    /**
+     * @param  string[]  $pastQuestions  Question texts already shown in this session.
+     */
+    public function handle(int $sessionId, int $questionId, int $studentAnswer, array $pastQuestions = []): SubmitAnswerDto
     {
         $session = $this->sessionQueries->findOrFail($sessionId);
 
@@ -34,7 +37,7 @@ final class SubmitAnswerService
         $isLastQuestion = $this->adaptiveAlgorithm->isSessionComplete($questionCount);
         $isCorrect = $studentAnswer === $question->correct_answer;
         $feedback = $this->generateFeedbackIfWrong($isCorrect, $question, $studentAnswer);
-        $nextQuestion = $this->prepareNextQuestion($isLastQuestion, $isCorrect, $question->difficulty);
+        $nextQuestion = $this->prepareNextQuestion($isLastQuestion, $isCorrect, $question->difficulty, $pastQuestions);
 
         $this->persistAnswer($session, $question->id, $studentAnswer, $isCorrect, $feedback, $isLastQuestion);
 
@@ -117,16 +120,17 @@ final class SubmitAnswerService
     }
 
     /**
+     * @param  string[]  $pastQuestions
      * @return array{difficulty: int, question: string, correct_answer: int}|null
      */
-    private function prepareNextQuestion(bool $isLastQuestion, bool $isCorrect, int $currentDifficulty): ?array
+    private function prepareNextQuestion(bool $isLastQuestion, bool $isCorrect, int $currentDifficulty, array $pastQuestions): ?array
     {
         if ($isLastQuestion) {
             return null;
         }
 
         $nextDifficulty = $this->adaptiveAlgorithm->nextDifficulty($isCorrect, $currentDifficulty);
-        $questionData = $this->questionGenerator->generate($nextDifficulty);
+        $questionData = $this->questionGenerator->generate($nextDifficulty, $pastQuestions);
 
         return [
             'difficulty' => $nextDifficulty,

@@ -33,11 +33,21 @@ final class SubmitAnswerRequest extends FormRequest
                 Rule::unique('answers', 'question_id'),
             ],
             'answer' => ['required', 'regex:/^-?\d+$/'],
+            'past_questions' => ['sometimes', 'array'],
+            'past_questions.*' => ['string', 'max:500'],
         ];
     }
 
     public function getValidatedAnswer(): int
     {
         return (int) trim((string) $this->input('answer'));
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getPastQuestions(): array
+    {
+        return (array) $this->input('past_questions', []);
     }
 }

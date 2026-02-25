@@ -17,7 +17,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const abortRef = useRef<AbortController | null>(null);
 
   const startRequest = (): AbortSignal => {
-    abortRef.current?.abort();ṅ
+    abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
     return controller.signal;
