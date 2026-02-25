@@ -27,7 +27,8 @@ final class SubmitAnswerService
     {
         $session = $this->sessionQueries->findOrFail($sessionId);
 
-        [$question, $questionCount] = $this->questionQueries->findInSessionWithCount($questionId, $sessionId);
+        $question = $this->questionQueries->findInSessionOrFail($questionId, $sessionId);
+        $questionCount = $question->question_number;
 
         $isLastQuestion = $this->adaptiveAlgorithm->isSessionComplete($questionCount);
         $isCorrect = $studentAnswer === $question->correct_answer;
